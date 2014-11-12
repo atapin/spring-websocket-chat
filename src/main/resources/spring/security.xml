@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:security="http://www.springframework.org/schema/security"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/security
-       http://www.springframework.org/schema/security/spring-security.xsd">
+<b:beans xmlns="http://www.springframework.org/schema/security"
+         xmlns:b="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
-</beans>
+    <b:bean id="logoutHandler" class="com.andreyatapin.chat.LogoutHandler"/>
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider user-service-ref="userService"/>
+    </authentication-manager>
+
+    <http pattern="/static/**" security="none" />
+    <http pattern="/favicon.ico" security="none"/>
+
+    <http use-expressions="true">
+        <intercept-url pattern="/" access="isAuthenticated()"/>
+        <form-login username-parameter="nickname"
+                    login-page="/login"
+                    default-target-url="/"
+                    authentication-failure-url="/login?failed"/>
+        <logout logout-url="/logout" success-handler-ref="logoutHandler"/>
+    </http>
+
+</b:beans>

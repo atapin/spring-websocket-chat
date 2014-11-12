@@ -1,6 +1,8 @@
 package com.andreyatapin.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -10,7 +12,8 @@ import java.util.List;
 /**
  * @author Andrey Atapin
  */
-@Service
+@Service("userService")
+//@Profile("prod")
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -32,7 +35,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return null;
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        if(userRepository.isOnline(username)) throw new UsernameNotFoundException("Name is already taken");
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
+        return new org.springframework.security.core.userdetails.User(username, "", authorities);
     }
 }

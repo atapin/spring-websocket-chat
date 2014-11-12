@@ -28,4 +28,8 @@ public class UserRepository {
     public synchronized List<User> getUsers() {
         return new ArrayList<>(users.values());
     }
+
+    public synchronized boolean isOnline(String nickname) {
+        return users.containsKey(nickname);
+    }
 }
