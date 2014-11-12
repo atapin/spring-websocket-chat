@@ -116,12 +116,13 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jboss.as.plugins</groupId>
-                <artifactId>jboss-as-maven-plugin</artifactId>
-                <version>7.1.1.Final</version>
-
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jboss-maven-plugin</artifactId>
+                <version>1.5.0</version>
                 <configuration>
-
+                    <jbossHome>/Users/aatapin/Downloads/jboss-eap-6.1</jbossHome>
+                    <serverName>all</serverName>
+                    <fileName>target/my-project.war</fileName>
                 </configuration>
             </plugin>
             <plugin>
