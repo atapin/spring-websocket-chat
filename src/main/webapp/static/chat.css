@@ -1,0 +1,13 @@
+#messages {
+    min-height: 400px;
+    max-height: 400px;
+    overflow: scroll;
+    background-color: #fcfcfc;
+}
+
+#users {
+    background-color: #f9f2f4;
+    min-height: 400px;
+    max-height: 400px;
+    overflow: scroll;
+}

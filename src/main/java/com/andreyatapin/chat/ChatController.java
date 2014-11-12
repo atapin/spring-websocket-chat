@@ -23,13 +23,15 @@ public class ChatController {
     @Autowired
     private UserService userService;
 
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() {
         return "index";
     }
 
     @RequestMapping("/login")
-    public String login() {
+    public String login(Principal principal) {
+
         return "login";
     }
 
@@ -40,7 +42,7 @@ public class ChatController {
         return userService.join(principal.getName());
     }
 
-    @MessageMapping("/msg")
+    @MessageMapping("/chat")
     @SendTo("/topic/message")
     public Message sendMessage(String message, Principal principal) {
         return new Message(new User(principal.getName()), message);

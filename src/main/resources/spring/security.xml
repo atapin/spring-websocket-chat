@@ -7,6 +7,9 @@
             http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
     <b:bean id="logoutHandler" class="com.andreyatapin.chat.LogoutHandler"/>
+    <b:bean id="authHandler" class="com.andreyatapin.chat.AuthHandler">
+
+    </b:bean>
 
     <authentication-manager alias="authenticationManager">
         <authentication-provider user-service-ref="userService"/>
@@ -15,12 +18,17 @@
     <http pattern="/static/**" security="none" />
     <http pattern="/favicon.ico" security="none"/>
 
-    <http use-expressions="true">
-        <intercept-url pattern="/" access="isAuthenticated()"/>
-        <form-login username-parameter="nickname"
+
+    <http use-expressions="true" auto-config="true" request-matcher="ant">
+        <intercept-url pattern="/login" access="permitAll"/>
+        <intercept-url pattern="/**" access="isAuthenticated()"/>
+        <form-login
+                    always-use-default-target="true"
+                    username-parameter="nickname"
                     login-page="/login"
                     default-target-url="/"
-                    authentication-failure-url="/login?failed"/>
+                    authentication-failure-url="/login?failed"
+                    authentication-success-handler-ref="authHandler"/>
         <logout logout-url="/logout" success-handler-ref="logoutHandler"/>
     </http>
 

@@ -3,7 +3,7 @@ package com.andreyatapin.chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,16 +13,20 @@ import java.io.IOException;
 /**
  * @author Andrey Atapin
  */
-public class LogoutHandler extends AbstractAuthenticationTargetUrlRequestHandler implements LogoutSuccessHandler {
+public class AuthHandler extends AbstractAuthenticationTargetUrlRequestHandler implements AuthenticationSuccessHandler {
 
     @Autowired
     private UserRepository userRepository;
 
     @Override
-    public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         final org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-        final String username = user.getUsername();
-        userRepository.removeUser(username);
-        handle(httpServletRequest, httpServletResponse, authentication);
+        try {
+            userRepository.addUser(new User(user.getUsername()));
+            handle(httpServletRequest, httpServletResponse, authentication);
+
+        } catch (UserExistsException e) {
+            // never occurs
+        }
     }
 }
