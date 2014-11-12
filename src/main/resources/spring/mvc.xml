@@ -10,7 +10,7 @@
 http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd ">
 
 
-    <context:component-scan base-package="com.andreyatapin.chat"/>
+    <context:component-scan base-package="com.andreyatapin.chat.web"/>
     <mvc:annotation-driven/>
 
     <mvc:resources mapping="/static/**" location="/static/"/>
@@ -20,14 +20,8 @@ http://www.springframework.org/schema/websocket http://www.springframework.org/s
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <bean id="chatHandler" class="com.andreyatapin.chat.ChatHandler"/>
-    <bean id="joinHandler" class="com.andreyatapin.chat.JoinHandler"/>
-
     <websocket:message-broker application-destination-prefix="/app">
-        <websocket:stomp-endpoint path="/join">
-            <websocket:sockjs/>
-        </websocket:stomp-endpoint>
-        <websocket:stomp-endpoint path="/msg">
+        <websocket:stomp-endpoint path="/chat, /users">
             <websocket:sockjs/>
         </websocket:stomp-endpoint>
         <websocket:simple-broker prefix="/topic"/>

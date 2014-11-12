@@ -1,12 +1,17 @@
-package com.andreyatapin.chat;
+package com.andreyatapin.chat.web;
 
+import com.andreyatapin.chat.model.Message;
+import com.andreyatapin.chat.model.User;
+import com.andreyatapin.chat.model.UserStatus;
+import com.andreyatapin.chat.service.UserExistsException;
+import com.andreyatapin.chat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.annotation.SendToUser;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -25,21 +30,21 @@ public class ChatController {
 
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index() {
+    public String index(Model model, Principal principal) {
+        model.addAttribute("user", principal.getName());
         return "index";
     }
 
     @RequestMapping("/login")
-    public String login(Principal principal) {
-
+    public String login() {
         return "login";
     }
 
-
-
-    @SubscribeMapping(value = "/topic/join")
-    public List<User> join(Principal principal) throws UserExistsException {
-        return userService.join(principal.getName());
+    @MessageMapping(value = "/users")
+    @SendTo("/topic/users")
+    public List<User> users(UserStatus userStatus) throws UserExistsException {
+        final List<User> users = userService.updateStatus(userStatus);
+        return users;
     }
 
     @MessageMapping("/chat")

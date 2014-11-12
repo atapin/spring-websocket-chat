@@ -1,5 +1,6 @@
-package com.andreyatapin.chat;
+package com.andreyatapin.chat.handler;
 
+import com.andreyatapin.chat.service.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler;
@@ -21,12 +22,12 @@ public class AuthHandler extends AbstractAuthenticationTargetUrlRequestHandler i
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         final org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-        try {
-            userRepository.addUser(new User(user.getUsername()));
+        //try {
+            //userRepository.addUser(new User(user.getUsername()));
             handle(httpServletRequest, httpServletResponse, authentication);
 
-        } catch (UserExistsException e) {
+        //} catch (UserExistsException e) {
             // never occurs
-        }
+        //}
     }
 }

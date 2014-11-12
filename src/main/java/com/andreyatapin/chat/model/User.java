@@ -1,4 +1,4 @@
-package com.andreyatapin.chat;
+package com.andreyatapin.chat.model;
 
 /**
  * Stores information about user
